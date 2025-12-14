@@ -7,7 +7,8 @@ const {
   addContentBlock,
   updateContentBlock,
   generateHinglishAudio,
-  getLessonAnalytics
+  getLessonAnalytics,
+  exportLessonPDF
 } = require('../controllers/lessonController');
 const { requireAuth } = require('../middlewares/auth');
 const { validationErrorHandler } = require('../middlewares/errorHandler');
@@ -72,22 +73,26 @@ router.route('/:id')
   .get(lessonIdValidation, validationErrorHandler, getLesson)
   .put(lessonIdValidation, updateLessonValidation, validationErrorHandler, updateLesson);
 
+// PDF Export
+router.route('/:id/pdf')
+  .get(lessonIdValidation, validationErrorHandler, exportLessonPDF);
+
 // Content block management
 router.route('/:id/blocks')
   .post(lessonIdValidation, contentBlockValidation, validationErrorHandler, addContentBlock);
 
 router.route('/:id/blocks/:index')
   .put(
-    lessonIdValidation, 
-    blockIndexValidation, 
-    contentBlockValidation, 
-    validationErrorHandler, 
+    lessonIdValidation,
+    blockIndexValidation,
+    contentBlockValidation,
+    validationErrorHandler,
     updateContentBlock
   )
   .delete(
-    lessonIdValidation, 
-    blockIndexValidation, 
-    validationErrorHandler, 
+    lessonIdValidation,
+    blockIndexValidation,
+    validationErrorHandler,
     deleteContentBlock
   );
 

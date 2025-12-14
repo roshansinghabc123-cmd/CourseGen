@@ -63,11 +63,22 @@ if (process.env.NODE_ENV === 'development') {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
+  const healthCheck = {
+    uptime: process.uptime(),
+    message: 'OK',
+    timestamp: Date.now(),
     environment: process.env.NODE_ENV || 'development',
-  });
+    memoryUsage: process.memoryUsage(),
+    cpuUsage: process.cpuUsage(),
+    nodeVersion: process.version
+  };
+
+  try {
+    res.status(200).json(healthCheck);
+  } catch (error) {
+    healthCheck.message = error;
+    res.status(503).send();
+  }
 });
 
 // API routes

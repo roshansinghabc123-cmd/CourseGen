@@ -1,0 +1,460 @@
+:root {
+    --primary: #667eea;
+    --secondary: #764ba2;
+    --bg: #f8f9fa;
+    --text: #2d3748;
+    --white: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.navbar {
+    background: var(--white);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero-section {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: #718096;
+    margin-bottom: 3rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+input[type="text"] {
+    padding: 1rem;
+    font-size: 1rem;
+    width: 400px;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus {
+    border-color: var(--primary);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    color: #4a5568;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.course-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Course Header */
+.course-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.course-header h2 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin: 1rem 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge.beginner {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge.intermediate {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge.advanced {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.tags {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tag {
+    background: #f3f4f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+/* Modules & Lessons */
+.module-card {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.module-header {
+    background: #f9fafb;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.module-header h4 {
+    margin: 0;
+    color: #111827;
+}
+
+.lesson-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lesson-item {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.lesson-item:hover {
+    background: #eff6ff;
+    padding-left: 2rem;
+    /* Slide effect */
+    border-left-color: var(--primary);
+}
+
+.lesson-item:active {
+    background: #dbeafe;
+    transform: scale(0.99);
+}
+
+.lesson-item:last-child {
+    border-bottom: none;
+}
+
+.lesson-item .icon {
+    font-size: 1.25rem;
+}
+
+.lesson-item .title {
+    flex: 1;
+    font-weight: 500;
+    color: #374151;
+}
+
+.lesson-item .arrow {
+    color: #9ca3af;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: black;
+}
+
+/* Lesson Content Styling */
+.lesson-view {
+    padding: 2rem 3rem;
+}
+
+.lesson-view h1 {
+    font-size: 2.25rem;
+    margin-bottom: 1.5rem;
+    color: #111827;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 1rem;
+}
+
+.objectives-box {
+    background: #ecfdf5;
+    border: 1px solid #d1fae5;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.objectives-box h3 {
+    color: #065f46;
+    margin-top: 0;
+}
+
+.objectives-box ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: #064e3b;
+}
+
+.content-text {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: #374151;
+    margin-bottom: 1.5rem;
+}
+
+.content-heading {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin: 2rem 0 1rem;
+}
+
+/* Code Block */
+.code-block {
+    background: #1e293b;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+}
+
+.code-header {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.code-block code {
+    color: #e2e8f0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+}
+
+/* Video Placeholders */
+.video-block {
+    background: #fff1f2;
+    border: 1px solid #ffe4e6;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.video-placeholder a {
+    display: inline-block;
+    background: #e11d48;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Quiz Styling */
+.quiz-block {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 3rem;
+}
+
+.quiz-block .question {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.quiz-block .option {
+    background: white;
+    border: 1px solid #d1d5db;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quiz-block .option:hover:not(.disabled) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.quiz-block .option.correct {
+    background: #d1fae5;
+    border-color: #34d399;
+    color: #065f46;
+}
+
+.quiz-block .option.wrong {
+    background: #fee2e2;
+    border-color: #f87171;
+    color: #991b1b;
+}
+
+.quiz-block .explanation {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #eff6ff;
+    border-radius: 6px;
+    color: #1e40af;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Loading State in Modal */
+.loading-state {
+    text-align: center;
+    padding: 4rem;
+}

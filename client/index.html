@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Learn: AI Course Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <header class="navbar">
+            <div class="logo">Text-to-Learn</div>
+            <nav>
+                <button id="login-btn" class="btn btn-primary" onclick="login()">Log In</button>
+                <div id="user-info" class="hidden">
+                    <span id="user-name">Guest</span>
+                    <button class="btn btn-outline" onclick="logout()">Log Out</button>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container">
+            <section id="hero" class="hero-section">
+                <h1>Turn Any Topic Into A Course</h1>
+                <p class="subtitle">AI-powered curriculum design, video generation, and interactive lessons in seconds.
+                </p>
+
+                <div class="input-group">
+                    <input type="text" id="topic-input"
+                        placeholder="Enter a topic (e.g., 'Quantum Physics for Kids')...">
+                    <button class="btn btn-lg btn-gradient" onclick="generateCourse()">Generate Course</button>
+                </div>
+
+                <div id="loading" class="hidden">
+                    <div class="spinner"></div>
+                    <p>Generating your course... This may take a minute.</p>
+                </div>
+            </section>
+
+            <section id="results" class="results-section hidden">
+                <h2>Your Course</h2>
+                <div id="course-content" class="course-card">
+                    <!-- Course data will be injected here -->
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
