@@ -458,3 +458,18 @@ input[type="text"]:focus {
     text-align: center;
     padding: 4rem;
 }
+/* Retry Button */
+.retry-btn {
+  background-color: #e11d48; /* Using a color that matches the video placeholder button */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.retry-btn:hover {
+  background-color: #be123c;
+}

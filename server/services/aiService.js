@@ -39,6 +39,35 @@ class AIService {
   }
 
   /**
+   * Helper to generate content with exponential backoff retry
+   * @param {Function} apiCall - The API call function to execute
+   * @param {number} retries - Number of retries left
+   * @param {number} delay - Current delay in ms
+   */
+  async generateContentWithRetry(apiCall, retries = 6, delay = 5000) {
+    try {
+      return await apiCall();
+    } catch (error) {
+      // Check for 429 (Too Many Requests) or 503 (Service Unavailable)
+      const isRateLimit = error.message.includes('429') ||
+        error.status === 429 ||
+        (error.response && error.response.status === 429);
+
+      const isOverloaded = error.message.includes('503') ||
+        error.status === 503 ||
+        (error.response && error.response.status === 503);
+
+      if ((isRateLimit || isOverloaded) && retries > 0) {
+        console.warn(`AI Service Rate Limit/Overload hit. Retrying in ${delay}ms... (${retries} retries left)`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return this.generateContentWithRetry(apiCall, retries - 1, delay * 2);
+      }
+
+      throw error;
+    }
+  }
+
+  /**
    * Generate course outline from a topic
    * @param {string} topic - The course topic
    * @returns {Promise<Object>} - Course outline with modules and lessons
@@ -47,11 +76,13 @@ class AIService {
     const prompt = this.buildCoursePrompt(topic);
 
     try {
-      const response = await this.ai.models.generateContent({
+      const callAI = () => this.ai.models.generateContent({
         model: this.modelName,
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: this.generationConfig,
       });
+
+      const response = await this.generateContentWithRetry(callAI);
 
       const text = this.extractText(response);
       const courseData = this.parseJSONResponse(text);
@@ -76,11 +107,13 @@ class AIService {
     const prompt = this.buildLessonPrompt(courseTitle, moduleTitle, lessonTitle, lessonIndex);
 
     try {
-      const response = await this.ai.models.generateContent({
+      const callAI = () => this.ai.models.generateContent({
         model: this.modelName,
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: this.generationConfig,
       });
+
+      const response = await this.generateContentWithRetry(callAI);
 
       const text = this.extractText(response);
       const lessonData = this.parseJSONResponse(text);
@@ -111,11 +144,13 @@ Return only the translated text, no extra formatting or explanations.
 `;
 
     try {
-      const response = await this.ai.models.generateContent({
+      const callAI = () => this.ai.models.generateContent({
         model: this.modelName,
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: { ...this.generationConfig, temperature: 0.5 },
       });
+
+      const response = await this.generateContentWithRetry(callAI);
 
       return this.extractText(response).trim();
     } catch (error) {
@@ -140,11 +175,13 @@ Make suggestions specific, practical, and beginner-friendly.
 `;
 
     try {
-      const response = await this.ai.models.generateContent({
+      const callAI = () => this.ai.models.generateContent({
         model: this.modelName,
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: { ...this.generationConfig, temperature: 0.8 },
       });
+
+      const response = await this.generateContentWithRetry(callAI);
 
       const text = this.extractText(response);
       return this.parseJSONResponse(text);

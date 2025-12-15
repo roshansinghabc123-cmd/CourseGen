@@ -21,7 +21,9 @@ const generateCourse = asyncHandler(async (req, res) => {
   }
 
   // Generate course using AI
+  console.log('Requesting course generation from AI...');
   const courseData = await aiService.generateCourse(topic.trim());
+  console.log('AI Generation complete. Creating DB entries...');
 
   // Create course in database
   const course = new Course({
@@ -34,11 +36,13 @@ const generateCourse = asyncHandler(async (req, res) => {
   });
 
   await course.save();
+  console.log('Course saved:', course._id);
 
   // Create modules and lessons
   for (let i = 0; i < courseData.modules.length; i++) {
+    console.log(`Processing module ${i + 1}/${courseData.modules.length}`);
     const moduleData = courseData.modules[i];
-    
+
     const module = new Module({
       title: moduleData.title,
       description: moduleData.description || '',
@@ -52,7 +56,7 @@ const generateCourse = asyncHandler(async (req, res) => {
     // Create lesson placeholders (content will be generated on-demand)
     for (let j = 0; j < moduleData.lessons.length; j++) {
       const lessonData = moduleData.lessons[j];
-      
+
       const lesson = new Lesson({
         title: lessonData.title,
         content: [
@@ -69,9 +73,11 @@ const generateCourse = asyncHandler(async (req, res) => {
       await lesson.save();
       await module.addLesson(lesson._id);
     }
+    console.log(`Module ${i} lessons saved.`);
 
     await course.addModule(module._id);
   }
+  console.log('All modules processed. Fetching populated course...');
 
   // Populate the response
   const populatedCourse = await Course.findById(course._id)
@@ -83,6 +89,7 @@ const generateCourse = asyncHandler(async (req, res) => {
       }
     });
 
+  console.log('Sending response:', JSON.stringify(populatedCourse, null, 2));
   res.status(201).json({
     success: true,
     data: populatedCourse,

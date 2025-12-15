@@ -36,6 +36,8 @@ function updateUI() {
 
 async function generateCourse() {
     const topic = document.getElementById('topic-input').value;
+    const generateBtn = document.getElementById('generate-btn');
+
     if (!topic) return alert('Please enter a topic');
 
     if (!user) {
@@ -53,7 +55,10 @@ async function generateCourse() {
     try {
         console.log("Generating course for topic:", topic);
 
-        const response = await fetch(`${API_URL}/courses/`, {
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Generating...';
+
+        const response = await fetch(`${API_URL}/courses`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,11 +72,12 @@ async function generateCourse() {
         console.log("API Response:", data);
 
         if (!response.ok) {
-            throw new Error(data.message || 'Failed to generate course');
+            throw new Error(data.error || data.message || 'Failed to generate course');
         }
 
         // Render Interactive Course Data
         const course = data.data;
+
         let html = `
             <header class="course-header">
                 <span class="badge ${course.difficulty}">${course.difficulty}</span>
@@ -81,36 +87,35 @@ async function generateCourse() {
                     ${course.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
                 </div>
             </header>
-            
             <div class="modules-container">
         `;
 
-        course.modules.forEach(module => {
-            html += `
-                <div class="module-card">
-                    <div class="module-header">
-                        <h4>${module.title}</h4>
-                    </div>
-                    <ul class="lesson-list">
-            `;
 
-            module.lessons.forEach(lesson => {
-                html += `
-                    <li class="lesson-item" onclick="loadLesson('${lesson._id}')">
-                        <span class="icon">📄</span>
-                        <span class="title">${lesson.title}</span>
-                        <span class="arrow">→</span>
-                    </li>
-                `;
-            });
 
-            html += `
-                    </ul>
+        const modulesHtml = course.modules.map(module => `
+            <div class="module-card">
+                <div class="module-header">
+                    <h4>${module.title}</h4>
                 </div>
-            `;
-        });
+                <ul class="lesson-list">
+                    ${module.lessons && module.lessons.length > 0
+                ? module.lessons.map(lesson => `
+                            <li class="lesson-item" onclick="loadLesson('${lesson._id || lesson.id}')">
+                                <span class="icon">📄</span>
+                                <span class="title">${lesson.title}</span>
+                                <span class="arrow">→</span>
+                            </li>
+                        `).join('')
+                : '<li class="lesson-item">No lessons</li>'
+            }
+                </ul>
+            </div>
+        `).join('');
 
-        html += `</div>
+        html += modulesHtml;
+        html += `</div>`;
+
+        html += `
         <div id="lesson-modal" class="modal">
             <div class="modal-content">
                 <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -120,12 +125,22 @@ async function generateCourse() {
             </div>
         </div>`;
 
+        // alert("Final HTML Length: " + html.length);
+
         courseContent.innerHTML = html; // Using courseContent as resultDiv
         results.classList.remove('hidden'); // Using results as resultDiv.classList.add('visible')
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Failed to generate course. Please try again.');
+
+        let errorMessage = error.message;
+        if (errorMessage.includes('429') || errorMessage.includes('Too Many Requests')) {
+            errorMessage = 'AI service is busy (Rate Limit). Please try again in a minute.';
+        } else if (errorMessage.includes('500')) {
+            errorMessage = 'Server error. We are retrying, but if this persists, please try again later.';
+        }
+
+        alert(`Failed to generate course: ${errorMessage}`);
     } finally {
         loading.classList.add('hidden');
         generateBtn.disabled = false;
@@ -158,7 +173,19 @@ async function loadLesson(lessonId) {
 
     } catch (error) {
         console.error('Load Lesson Error:', error);
-        contentArea.innerHTML = `<div class="error-state">Failed to load lesson: ${error.message}</div>`;
+
+        let errorMessage = error.message;
+        let retryButton = '';
+
+        if (errorMessage.includes('Failed to generate lesson')) {
+            retryButton = `<button onclick="loadLesson('${lessonId}')" class="retry-btn">Retry Generation</button>`;
+        }
+
+        contentArea.innerHTML = `
+            <div class="error-state">
+                <p>Failed to load lesson: ${errorMessage}</p>
+                ${retryButton}
+            </div>`;
     }
 }
 
@@ -273,5 +300,12 @@ window.onclick = function (event) {
 // Init
 document.addEventListener('DOMContentLoaded', () => {
     console.log("App Initialized");
+
+    // Attach Event Listeners
+    const genBtn = document.getElementById('generate-btn');
+    if (genBtn) {
+        genBtn.addEventListener('click', generateCourse);
+    }
+
     login(); // Auto-login for convenience
 });
